@@ -1,15 +1,20 @@
-import { ethers } from 'ethers';
+const USER_TYPE = {
+  NONE: 0,
+  ADMIN: 1,
+  CLIENT: 2,
+  WORKER: 3,
+  VOTER: 4
+};
 
-async function requestAccount() {
-    await window.ethereum.request({ method: 'eth_requestAccounts' });
-}
+const unWrapAddress = (addr) => {
+  if (Array.isArray(addr) && addr.length > 0) {
+    const [_addr] = addr;
+    return _addr?.toLowerCase();
+  };
+  return addr;
+};
 
-function getContract(contractAddr, artifact) {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(contractAddr, artifact.abi, signer);
-
-    return contract;
-}
-
-export { requestAccount, getContract }
+export default {
+  unWrapAddress,
+  USER_TYPE
+};
