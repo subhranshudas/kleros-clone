@@ -22,7 +22,41 @@ export default function EscrowDetails({
 
   const [submissionData, setSubmissionData] = useState(completetionStatus ? details?.submission : '');
 
-  const workApprovalDone = completetionStatus && !details?.isDisputed;
+  const shouldDisableClientEscrowDetailsActions = () => {
+    if (details?.clientDecisionGiven) { // client has already given decision
+      return true;
+    }
+
+    if (details?.submission?.length < 1) { // worker is yet to submit
+      return true;
+    }
+
+    if (details?.isDisputed) { // escrow is in dispute
+      return true;
+    }
+
+    if (details?.isSettled) {
+      return true;
+    }
+
+    return false;
+  };
+
+  const shouldDisableWorkerEscrowActions = () => {
+    if (details?.clientDecisionGiven) { // client has already given decision
+      return true;
+    }
+
+    if (details?.submission?.length > 0) { // worker already has a submission
+      return true;
+    }
+
+    if (submissionData.length < 1) { // worker is yet to enter any value
+      return true;
+    }
+
+    return false;
+  }
 
   return (
     <Card sx={{ minWidth: 600 }}>
@@ -90,10 +124,22 @@ export default function EscrowDetails({
       </CardContent>
       {isClient ? (
         <CardActions>
-            <Button color="success" variant="contained" size="small" disabled={!completetionStatus || workApprovalDone} onClick={() => clientSubmit(true, details?.escrowId)}>
+            <Button
+              color="success"
+              variant="contained"
+              size="small"
+              disabled={shouldDisableClientEscrowDetailsActions()}
+              onClick={() => clientSubmit(true, details?.escrowId)}
+            >
                 Approve
             </Button>
-            <Button color="error" variant="contained" size="small" disabled={!completetionStatus || workApprovalDone} onClick={() => clientSubmit(false, details?.escrowId)}>
+            <Button
+              color="error"
+              variant="contained"
+              size="small"
+              disabled={shouldDisableClientEscrowDetailsActions()}
+              onClick={() => clientSubmit(false, details?.escrowId)}
+            >
                 Reject
             </Button>
         </CardActions>
@@ -103,7 +149,7 @@ export default function EscrowDetails({
                 color="success"
                 variant="contained"
                 size="small"
-                disabled={details?.isSettled || completetionStatus || submissionData.length === 0}
+                disabled={shouldDisableWorkerEscrowActions()}
                 onClick={() => workerSubmit(submissionData)}
             >
                 SUBMIT WORK
