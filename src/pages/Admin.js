@@ -35,18 +35,15 @@ const Admin = () => {
       let _txn, _receipt, _events, _eventArgs;
 
       setShowLoader(true);
-      debugger;
+
       try {
           const _escrowID = await contract.escrowIds(0);
-          debugger;
-
+          
           // get details
           _txn = await contract.getEscrowDetails(_escrowID);
           _receipt = await _txn.wait();
           _events = await _receipt.events?.filter((x) => x.event === 'EscrowDetails');
           _eventArgs = _events[0]?.args;
-
-          debugger;
 
           setEscrowDetails({
               escrowId: _escrowID,
@@ -71,8 +68,6 @@ const Admin = () => {
       let _txn, _receipt, _events, _eventArgs;
       setShowLoader(true);
 
-      debugger;
-
       try {
           _txn = await contract.disburseFunds(escrowDetails?.escrowId);
           _receipt = await _txn.wait();
@@ -80,8 +75,6 @@ const Admin = () => {
           _eventArgs = _events[0]?.args;
 
           const _escrowID = _eventArgs.escrowId;
-
-          debugger;
 
           // get details
           _txn = await contract.getEscrowDetails(_escrowID);
@@ -104,6 +97,8 @@ const Admin = () => {
       } catch (err) {
         console.error("Error while disburseFunds(): ", err);
       }
+
+      setShowLoader(false);
     };
 
     useEffect(() => {

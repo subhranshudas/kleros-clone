@@ -52,6 +52,9 @@ some design choices were made very simple to make the POC demoable, improvements
    npm start
    ```
 
+   !!!IMPORTANT!!!
+   If you are running the App locally, please make sure when you switch to an account to reset the account in MM advanced settings to avoid dev issues
+
 4. Running test for sample contract
 
    ```bash

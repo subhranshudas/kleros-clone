@@ -165,8 +165,6 @@ export default function App() {
     handleNonAdminUserFlows(userType);
   }, [userType]);
 
-  console.log("userType: ", userType);
-
   return (
     <Web3Context.Provider value={getWeb3Context()}>
       {showLoader ? (

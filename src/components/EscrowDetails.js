@@ -17,7 +17,6 @@ export default function EscrowDetails({
     workerSubmit
 }) {
 
-  console.log("EscrowDetails: ", details);
   const ethAmount = ethers.utils.formatEther(details?.amount)?.toString() + " ETH";
   const completetionStatus = details?.submission?.length > 0;
 

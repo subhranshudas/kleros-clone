@@ -111,7 +111,8 @@ contract EscrowManager {
   */
   function createEscrow(address _worker, uint _amount, string memory _agreement)
     public payable {
-    require(_amount > 0, "Escrow amount should not be 0");
+    require(msg.value > 0, "Escrow amount should not be 0");
+    require(msg.value == _amount, "Amount mismatch");
 
     address[] memory _yes;
     address[] memory _no;
@@ -213,25 +214,8 @@ contract EscrowManager {
       bool isValidWork = _escrow.votes.yes.length >= _escrow.votes.no.length;
       address whomToPay = isValidWork ? _escrow.worker : _escrow.client;
     
-      // (bool success) = payable(whomToPay).send(_escrow.amount);
-      // require(success, "ESCROW SETTLEMENT FAILED!");
-
-      // payable(whomToPay).transfer(_escrow.amount);
-      uint gasDebug = gasleft();
-
-      console.log("gasDebug: ", gasDebug);
-      console.log("_escrow.amount: ", _escrow.amount);
-
-      (bool success, bytes memory result) = payable(whomToPay).call{ value: _escrow.amount }("");
-
-      gasDebug = gasleft();
-      console.log("gasDebug: ", gasDebug);
-
-      console.log("printing the data given by call");
-      console.logBytes(result);
+      (bool success, ) = payable(whomToPay).call{ value: _escrow.amount }("");
       require(success, "TRANSFER FAILED!");
-
-      console.log("disburseFunds() payment done");
 
       escrows[_escrowId].isSettled = true;
 

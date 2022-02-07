@@ -35,7 +35,10 @@ describe("EscrowManager Contract", () => {
         let escrowsCreated = 0;
 
         // 1st escrow
-        txn = await escrowManager.connect(client).createEscrow(worker.address, contractAmount, agreement, {value: contractAmount});
+        txn = await escrowManager.connect(client).createEscrow(
+          worker.address, contractAmount, agreement,
+          {value: contractAmount}
+        );
         receipt = await txn.wait();
         events = await receipt.events?.filter((x) => x.event == 'EscrowCreated');
         escrowId = events[0]?.args?.escrowId;
@@ -506,7 +509,7 @@ describe("EscrowManager Contract", () => {
 
     });
 
-    it.only("disburseFunds() to worker if dispute is in worker favor", async () => {
+    it("disburseFunds() to worker if dispute is in worker favor", async () => {
         let contractAmount = ethers.utils.parseEther("2.8");
         let agreement = "Build a website";
 
@@ -599,322 +602,322 @@ describe("EscrowManager Contract", () => {
         ).equal(true);
     });
 
-    // it("disburseFunds() to client if dispute is in client favor", async () => {
-    //     let contractAmount = 250;
-    //     let agreement = "Build a website";
+    it("disburseFunds() to client if dispute is in client favor", async () => {
+        let contractAmount = 250;
+        let agreement = "Build a website";
 
-    //     let txn, receipt, escrowId, _escrowId;
-    //     let escrowsCreated = 0;
+        let txn, receipt, escrowId, _escrowId;
+        let escrowsCreated = 0;
 
-    //     // client creates escrow
-    //     txn = await escrowManager.connect(client).createEscrow(worker.address, contractAmount, agreement, {value: contractAmount});
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'EscrowCreated');
-    //     escrowId = events[0]?.args?.escrowId;
-    //     _escrowId = await escrowManager.escrowIds(escrowsCreated);
+        // client creates escrow
+        txn = await escrowManager.connect(client).createEscrow(worker.address, contractAmount, agreement, {value: contractAmount});
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'EscrowCreated');
+        escrowId = events[0]?.args?.escrowId;
+        _escrowId = await escrowManager.escrowIds(escrowsCreated);
 
-    //     expect(escrowId).equal(_escrowId);
+        expect(escrowId).equal(_escrowId);
 
 
-    //      // worker submits
-    //     const work = agreement + "  2";
+         // worker submits
+        const work = agreement + "  2";
 
-    //     txn = await escrowManager.connect(worker).submitWork(_escrowId, work);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'WorkSubmitted');
-    //     eventArgs = events[0]?.args;
-    //     const submittedEscrowId = eventArgs.escrowId;
+        txn = await escrowManager.connect(worker).submitWork(_escrowId, work);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'WorkSubmitted');
+        eventArgs = events[0]?.args;
+        const submittedEscrowId = eventArgs.escrowId;
  
-    //     expect(submittedEscrowId).equal(_escrowId);
+        expect(submittedEscrowId).equal(_escrowId);
  
-    //     txn = await escrowManager.connect(worker).getEscrowDetails(_escrowId);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'EscrowDetails');
-    //     eventArgs = events[0]?.args;
+        txn = await escrowManager.connect(worker).getEscrowDetails(_escrowId);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'EscrowDetails');
+        eventArgs = events[0]?.args;
  
-    //     expect(eventArgs.submission).equal(work);
+        expect(eventArgs.submission).equal(work);
 
 
-    //     // client rejects
-    //     txn = await escrowManager.connect(client).approveWork(false, _escrowId);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'WorkRejected');
-    //     eventArgs = events[0]?.args;
+        // client rejects
+        txn = await escrowManager.connect(client).approveWork(false, _escrowId);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'WorkRejected');
+        eventArgs = events[0]?.args;
 
-    //     expect(eventArgs.escrowId).equal(_escrowId);
+        expect(eventArgs.escrowId).equal(_escrowId);
 
-    //     // voter votes
-    //     txn = await escrowManager.connect(voter).voteForDispute(_escrowId, false);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'DisputeResolved');
-    //     eventArgs = events[0]?.args;
+        // voter votes
+        txn = await escrowManager.connect(voter).voteForDispute(_escrowId, false);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'DisputeResolved');
+        eventArgs = events[0]?.args;
 
-    //     expect(eventArgs.escrowId).equal(_escrowId);
+        expect(eventArgs.escrowId).equal(_escrowId);
 
-    //     txn = await escrowManager.connect(client).getEscrowDetails(_escrowId);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'EscrowDetails');
-    //     eventArgs = events[0]?.args;
+        txn = await escrowManager.connect(client).getEscrowDetails(_escrowId);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'EscrowDetails');
+        eventArgs = events[0]?.args;
  
-    //     expect(eventArgs.isDisputed).equal(false);
+        expect(eventArgs.isDisputed).equal(false);
 
-    //     expect(eventArgs.votesNo.length > 0).equal(true);
+        expect(eventArgs.votesNo.length > 0).equal(true);
 
-    //     const [whoVoted] = eventArgs.votesNo;
-    //     expect(whoVoted).equal(voter.address);
+        const [whoVoted] = eventArgs.votesNo;
+        expect(whoVoted).equal(voter.address);
 
-    //     const _escrowAmount = eventArgs.amount;
+        const _escrowAmount = eventArgs.amount;
 
-    //     const balanceOfAdminBefore = await ethers.provider.getBalance(escrowAdmin.address);
-    //     const balanceOfClientBefore = await ethers.provider.getBalance(client.address);
-    //     const balanceOfWorkerBefore = await ethers.provider.getBalance(worker.address);
+        const balanceOfAdminBefore = await ethers.provider.getBalance(escrowAdmin.address);
+        const balanceOfClientBefore = await ethers.provider.getBalance(client.address);
+        const balanceOfWorkerBefore = await ethers.provider.getBalance(worker.address);
 
-    //     // admin disburses
-    //     txn = await escrowManager.connect(escrowAdmin).disburseFunds(_escrowId);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'EscrowSettled');
-    //     eventArgs = events[0]?.args;
+        // admin disburses
+        txn = await escrowManager.connect(escrowAdmin).disburseFunds(_escrowId);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'EscrowSettled');
+        eventArgs = events[0]?.args;
 
-    //     const balanceOfAdminAfter = await ethers.provider.getBalance(escrowAdmin.address);
-    //     const balanceOfClientAfter = await ethers.provider.getBalance(client.address);
-    //     const balanceOfWorkerAfter = await ethers.provider.getBalance(worker.address);
+        const balanceOfAdminAfter = await ethers.provider.getBalance(escrowAdmin.address);
+        const balanceOfClientAfter = await ethers.provider.getBalance(client.address);
+        const balanceOfWorkerAfter = await ethers.provider.getBalance(worker.address);
         
-    //     // take gas into account
-    //     expect(
-    //         (balanceOfAdminAfter.add(_escrowAmount)).lte(balanceOfAdminBefore)
-    //     ).equal(true);
+        // take gas into account
+        expect(
+            (balanceOfAdminAfter.add(_escrowAmount)).lte(balanceOfAdminBefore)
+        ).equal(true);
 
-    //     expect(
-    //         (balanceOfClientBefore.add(_escrowAmount)).eq(balanceOfClientAfter)
-    //     ).equal(true);
+        expect(
+            (balanceOfClientBefore.add(_escrowAmount)).eq(balanceOfClientAfter)
+        ).equal(true);
 
-    //     expect(
-    //         balanceOfWorkerBefore.eq(balanceOfWorkerAfter)
-    //     ).equal(true);
-    // });
+        expect(
+            balanceOfWorkerBefore.eq(balanceOfWorkerAfter)
+        ).equal(true);
+    });
 
-    // it("disburseFunds() should fail if not called by admin", async () => {
-    //     let contractAmount = 250;
-    //     let agreement = "Build a website";
+    it("disburseFunds() should fail if not called by admin", async () => {
+        let contractAmount = 250;
+        let agreement = "Build a website";
 
-    //     let txn, receipt, escrowId, _escrowId;
-    //     let escrowsCreated = 0;
+        let txn, receipt, escrowId, _escrowId;
+        let escrowsCreated = 0;
 
-    //     // client creates escrow
-    //     txn = await escrowManager.connect(client).createEscrow(worker.address, contractAmount, agreement, {value: contractAmount});
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'EscrowCreated');
-    //     escrowId = events[0]?.args?.escrowId;
-    //     _escrowId = await escrowManager.escrowIds(escrowsCreated);
+        // client creates escrow
+        txn = await escrowManager.connect(client).createEscrow(worker.address, contractAmount, agreement, {value: contractAmount});
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'EscrowCreated');
+        escrowId = events[0]?.args?.escrowId;
+        _escrowId = await escrowManager.escrowIds(escrowsCreated);
 
-    //     expect(escrowId).equal(_escrowId);
+        expect(escrowId).equal(_escrowId);
 
 
-    //      // worker submits
-    //     const work = agreement + "  2";
+         // worker submits
+        const work = agreement + "  2";
 
-    //     txn = await escrowManager.connect(worker).submitWork(_escrowId, work);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'WorkSubmitted');
-    //     eventArgs = events[0]?.args;
-    //     const submittedEscrowId = eventArgs.escrowId;
+        txn = await escrowManager.connect(worker).submitWork(_escrowId, work);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'WorkSubmitted');
+        eventArgs = events[0]?.args;
+        const submittedEscrowId = eventArgs.escrowId;
  
-    //     expect(submittedEscrowId).equal(_escrowId);
+        expect(submittedEscrowId).equal(_escrowId);
  
-    //     txn = await escrowManager.connect(worker).getEscrowDetails(_escrowId);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'EscrowDetails');
-    //     eventArgs = events[0]?.args;
+        txn = await escrowManager.connect(worker).getEscrowDetails(_escrowId);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'EscrowDetails');
+        eventArgs = events[0]?.args;
  
-    //     expect(eventArgs.submission).equal(work);
+        expect(eventArgs.submission).equal(work);
 
 
-    //     // client rejects
-    //     txn = await escrowManager.connect(client).approveWork(false, _escrowId);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'WorkRejected');
-    //     eventArgs = events[0]?.args;
+        // client rejects
+        txn = await escrowManager.connect(client).approveWork(false, _escrowId);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'WorkRejected');
+        eventArgs = events[0]?.args;
 
-    //     expect(eventArgs.escrowId).equal(_escrowId);
+        expect(eventArgs.escrowId).equal(_escrowId);
 
-    //     // voter votes
-    //     txn = await escrowManager.connect(voter).voteForDispute(_escrowId, false);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'DisputeResolved');
-    //     eventArgs = events[0]?.args;
+        // voter votes
+        txn = await escrowManager.connect(voter).voteForDispute(_escrowId, false);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'DisputeResolved');
+        eventArgs = events[0]?.args;
 
-    //     expect(eventArgs.escrowId).equal(_escrowId);
+        expect(eventArgs.escrowId).equal(_escrowId);
 
-    //     txn = await escrowManager.connect(client).getEscrowDetails(_escrowId);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'EscrowDetails');
-    //     eventArgs = events[0]?.args;
+        txn = await escrowManager.connect(client).getEscrowDetails(_escrowId);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'EscrowDetails');
+        eventArgs = events[0]?.args;
  
-    //     expect(eventArgs.isDisputed).equal(false);
+        expect(eventArgs.isDisputed).equal(false);
 
-    //     expect(eventArgs.votesNo.length > 0).equal(true);
+        expect(eventArgs.votesNo.length > 0).equal(true);
 
-    //     const [whoVoted] = eventArgs.votesNo;
-    //     expect(whoVoted).equal(voter.address);
+        const [whoVoted] = eventArgs.votesNo;
+        expect(whoVoted).equal(voter.address);
 
-    //     // client disburses
-    //      await expect(
-	// 		escrowManager.connect(client).disburseFunds(_escrowId)
-	// 	).to.be.revertedWith("Not Admin");
+        // client disburses
+         await expect(
+			escrowManager.connect(client).disburseFunds(_escrowId)
+		).to.be.revertedWith("Not Admin");
 
-    //     // worker disburses
-    //     await expect(
-	// 		escrowManager.connect(worker).disburseFunds(_escrowId)
-	// 	).to.be.revertedWith("Not Admin");
-    // });
+        // worker disburses
+        await expect(
+			escrowManager.connect(worker).disburseFunds(_escrowId)
+		).to.be.revertedWith("Not Admin");
+    });
 
-    // it("disburseFunds() should fail if dispute is not resolved", async () => {
-    //     let contractAmount = 250;
-    //     let agreement = "Build a website";
+    it("disburseFunds() should fail if dispute is not resolved", async () => {
+        let contractAmount = 250;
+        let agreement = "Build a website";
 
-    //     let txn, receipt, escrowId, _escrowId;
-    //     let escrowsCreated = 0;
+        let txn, receipt, escrowId, _escrowId;
+        let escrowsCreated = 0;
 
-    //     // client creates escrow
-    //     txn = await escrowManager.connect(client).createEscrow(worker.address, contractAmount, agreement, {value: contractAmount});
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'EscrowCreated');
-    //     escrowId = events[0]?.args?.escrowId;
-    //     _escrowId = await escrowManager.escrowIds(escrowsCreated);
+        // client creates escrow
+        txn = await escrowManager.connect(client).createEscrow(worker.address, contractAmount, agreement, {value: contractAmount});
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'EscrowCreated');
+        escrowId = events[0]?.args?.escrowId;
+        _escrowId = await escrowManager.escrowIds(escrowsCreated);
 
-    //     expect(escrowId).equal(_escrowId);
+        expect(escrowId).equal(_escrowId);
 
 
-    //      // worker submits
-    //     const work = agreement + "  2";
+         // worker submits
+        const work = agreement + "  2";
 
-    //     txn = await escrowManager.connect(worker).submitWork(_escrowId, work);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'WorkSubmitted');
-    //     eventArgs = events[0]?.args;
-    //     const submittedEscrowId = eventArgs.escrowId;
+        txn = await escrowManager.connect(worker).submitWork(_escrowId, work);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'WorkSubmitted');
+        eventArgs = events[0]?.args;
+        const submittedEscrowId = eventArgs.escrowId;
  
-    //     expect(submittedEscrowId).equal(_escrowId);
+        expect(submittedEscrowId).equal(_escrowId);
  
-    //     txn = await escrowManager.connect(worker).getEscrowDetails(_escrowId);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'EscrowDetails');
-    //     eventArgs = events[0]?.args;
+        txn = await escrowManager.connect(worker).getEscrowDetails(_escrowId);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'EscrowDetails');
+        eventArgs = events[0]?.args;
  
-    //     expect(eventArgs.submission).equal(work);
+        expect(eventArgs.submission).equal(work);
 
 
-    //     // client rejects
-    //     txn = await escrowManager.connect(client).approveWork(false, _escrowId);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'WorkRejected');
-    //     eventArgs = events[0]?.args;
+        // client rejects
+        txn = await escrowManager.connect(client).approveWork(false, _escrowId);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'WorkRejected');
+        eventArgs = events[0]?.args;
 
-    //     expect(eventArgs.escrowId).equal(_escrowId);
+        expect(eventArgs.escrowId).equal(_escrowId);
 
-    //     // admin disburses
-    //      await expect(
-	// 		escrowManager.connect(escrowAdmin).disburseFunds(_escrowId)
-	// 	).to.be.revertedWith("Escrow dispute not resolved!");
-    // });
+        // admin disburses
+         await expect(
+			escrowManager.connect(escrowAdmin).disburseFunds(_escrowId)
+		).to.be.revertedWith("Escrow dispute not resolved!");
+    });
 
-    // it("disburseFunds() should fail if escrow is already settled", async () => {
-    //     let contractAmount = 250;
-    //     let agreement = "Build a website";
+    it("disburseFunds() should fail if escrow is already settled", async () => {
+        let contractAmount = 250;
+        let agreement = "Build a website";
 
-    //     let txn, receipt, escrowId, _escrowId;
-    //     let escrowsCreated = 0;
+        let txn, receipt, escrowId, _escrowId;
+        let escrowsCreated = 0;
 
-    //     // client creates escrow
-    //     txn = await escrowManager.connect(client).createEscrow(worker.address, contractAmount, agreement, {value: contractAmount});
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'EscrowCreated');
-    //     escrowId = events[0]?.args?.escrowId;
-    //     _escrowId = await escrowManager.escrowIds(escrowsCreated);
+        // client creates escrow
+        txn = await escrowManager.connect(client).createEscrow(worker.address, contractAmount, agreement, {value: contractAmount});
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'EscrowCreated');
+        escrowId = events[0]?.args?.escrowId;
+        _escrowId = await escrowManager.escrowIds(escrowsCreated);
 
-    //     expect(escrowId).equal(_escrowId);
+        expect(escrowId).equal(_escrowId);
 
 
-    //      // worker submits
-    //     const work = agreement + "  2";
+         // worker submits
+        const work = agreement + "  2";
 
-    //     txn = await escrowManager.connect(worker).submitWork(_escrowId, work);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'WorkSubmitted');
-    //     eventArgs = events[0]?.args;
-    //     const submittedEscrowId = eventArgs.escrowId;
+        txn = await escrowManager.connect(worker).submitWork(_escrowId, work);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'WorkSubmitted');
+        eventArgs = events[0]?.args;
+        const submittedEscrowId = eventArgs.escrowId;
  
-    //     expect(submittedEscrowId).equal(_escrowId);
+        expect(submittedEscrowId).equal(_escrowId);
  
-    //     txn = await escrowManager.connect(worker).getEscrowDetails(_escrowId);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'EscrowDetails');
-    //     eventArgs = events[0]?.args;
+        txn = await escrowManager.connect(worker).getEscrowDetails(_escrowId);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'EscrowDetails');
+        eventArgs = events[0]?.args;
  
-    //     expect(eventArgs.submission).equal(work);
+        expect(eventArgs.submission).equal(work);
 
 
-    //     // client rejects
-    //     txn = await escrowManager.connect(client).approveWork(false, _escrowId);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'WorkRejected');
-    //     eventArgs = events[0]?.args;
+        // client rejects
+        txn = await escrowManager.connect(client).approveWork(false, _escrowId);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'WorkRejected');
+        eventArgs = events[0]?.args;
 
-    //     expect(eventArgs.escrowId).equal(_escrowId);
+        expect(eventArgs.escrowId).equal(_escrowId);
 
-    //     // voter votes
-    //     txn = await escrowManager.connect(voter).voteForDispute(_escrowId, false);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'DisputeResolved');
-    //     eventArgs = events[0]?.args;
+        // voter votes
+        txn = await escrowManager.connect(voter).voteForDispute(_escrowId, false);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'DisputeResolved');
+        eventArgs = events[0]?.args;
 
-    //     expect(eventArgs.escrowId).equal(_escrowId);
+        expect(eventArgs.escrowId).equal(_escrowId);
 
-    //     txn = await escrowManager.connect(client).getEscrowDetails(_escrowId);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'EscrowDetails');
-    //     eventArgs = events[0]?.args;
+        txn = await escrowManager.connect(client).getEscrowDetails(_escrowId);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'EscrowDetails');
+        eventArgs = events[0]?.args;
  
-    //     expect(eventArgs.isDisputed).equal(false);
+        expect(eventArgs.isDisputed).equal(false);
 
-    //     expect(eventArgs.votesNo.length > 0).equal(true);
+        expect(eventArgs.votesNo.length > 0).equal(true);
 
-    //     const [whoVoted] = eventArgs.votesNo;
-    //     expect(whoVoted).equal(voter.address);
+        const [whoVoted] = eventArgs.votesNo;
+        expect(whoVoted).equal(voter.address);
 
-    //     const _escrowAmount = eventArgs.amount;
+        const _escrowAmount = eventArgs.amount;
 
-    //     const balanceOfAdminBefore = await ethers.provider.getBalance(escrowAdmin.address);
-    //     const balanceOfClientBefore = await ethers.provider.getBalance(client.address);
-    //     const balanceOfWorkerBefore = await ethers.provider.getBalance(worker.address);
+        const balanceOfAdminBefore = await ethers.provider.getBalance(escrowAdmin.address);
+        const balanceOfClientBefore = await ethers.provider.getBalance(client.address);
+        const balanceOfWorkerBefore = await ethers.provider.getBalance(worker.address);
 
-    //     // admin disburses
-    //     txn = await escrowManager.connect(escrowAdmin).disburseFunds(_escrowId);
-    //     receipt = await txn.wait();
-    //     events = await receipt.events?.filter((x) => x.event == 'EscrowSettled');
-    //     eventArgs = events[0]?.args;
+        // admin disburses
+        txn = await escrowManager.connect(escrowAdmin).disburseFunds(_escrowId);
+        receipt = await txn.wait();
+        events = await receipt.events?.filter((x) => x.event == 'EscrowSettled');
+        eventArgs = events[0]?.args;
 
-    //     const balanceOfAdminAfter = await ethers.provider.getBalance(escrowAdmin.address);
-    //     const balanceOfClientAfter = await ethers.provider.getBalance(client.address);
-    //     const balanceOfWorkerAfter = await ethers.provider.getBalance(worker.address);
+        const balanceOfAdminAfter = await ethers.provider.getBalance(escrowAdmin.address);
+        const balanceOfClientAfter = await ethers.provider.getBalance(client.address);
+        const balanceOfWorkerAfter = await ethers.provider.getBalance(worker.address);
         
-    //     // take gas into account
-    //     expect(
-    //         (balanceOfAdminAfter.add(_escrowAmount)).lte(balanceOfAdminBefore)
-    //     ).equal(true);
+        // take gas into account
+        expect(
+            (balanceOfAdminAfter.add(_escrowAmount)).lte(balanceOfAdminBefore)
+        ).equal(true);
 
-    //     expect(
-    //         (balanceOfClientBefore.add(_escrowAmount)).eq(balanceOfClientAfter)
-    //     ).equal(true);
+        expect(
+            (balanceOfClientBefore.add(_escrowAmount)).eq(balanceOfClientAfter)
+        ).equal(true);
 
-    //     expect(
-    //         balanceOfWorkerBefore.eq(balanceOfWorkerAfter)
-    //     ).equal(true);
+        expect(
+            balanceOfWorkerBefore.eq(balanceOfWorkerAfter)
+        ).equal(true);
 
 
-    //     // admin disburses again
-    //     await expect(
-	// 		escrowManager.connect(escrowAdmin).disburseFunds(_escrowId)
-	// 	).to.be.revertedWith("Escrow already settled");
-    // });
+        // admin disburses again
+        await expect(
+			escrowManager.connect(escrowAdmin).disburseFunds(_escrowId)
+		).to.be.revertedWith("Escrow already settled");
+    });
 });

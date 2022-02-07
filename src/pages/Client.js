@@ -23,22 +23,18 @@ const Client = () => {
         setShowLoader(true);
 
         try {
-            _txn = await contract.createEscrow(workerAddress, contractAmount, agreement);
+            _txn = await contract.createEscrow(workerAddress, contractAmount, agreement, { value: contractAmount });
             _receipt = await _txn.wait();
             _events = await _receipt.events?.filter((x) => x.event === 'EscrowCreated');
             _eventArgs = _events[0]?.args;
 
             const _escrowID = _eventArgs.escrowId;
 
-            console.info(`ESCROW: ${_escrowID} created!`);
-
             // get details
             _txn = await contract.getEscrowDetails(_eventArgs.escrowId);
             _receipt = await _txn.wait();
             _events = await _receipt.events?.filter((x) => x.event === 'EscrowDetails');
             _eventArgs = _events[0]?.args;
-
-            console.info("line 39: escrowId: ", _eventArgs.escrowId);
 
             setEscrowDetails({
               escrowId: _escrowID,
@@ -72,8 +68,6 @@ const Client = () => {
             _receipt = await _txn.wait();
             _events = await _receipt.events?.filter((x) => x.event === 'EscrowDetails');
             _eventArgs = _events[0]?.args;
-
-            debugger;
 
             setEscrowDetails({
                 escrowId: _escrowID,
@@ -112,8 +106,6 @@ const Client = () => {
             _events = await _receipt.events?.filter((x) => x.event === 'EscrowDetails');
             _eventArgs = _events[0]?.args;
 
-            debugger;
-
             setEscrowDetails({
                 escrowId: _escrowID,
                 worker: _eventArgs?.worker,
@@ -134,8 +126,6 @@ const Client = () => {
     useEffect(() => {
         fetchClientEscrowIds();
     }, []);
-
-    console.log("escrowDetails: ", escrowDetails);
 
     return (
         <Box display="flex" flexDirection="column">
