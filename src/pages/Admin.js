@@ -1,7 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isEmpty } from 'lodash';
-import { Box, Button, Typography, Card, CardActions, CardContent } from "@mui/material";
+import { Box, Button, Typography, Card, CardActions, CardContent, Chip } from "@mui/material";
+import DoneIcon from "@mui/icons-material/Done";
+import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import { ethers } from 'ethers';
 import { Web3Context } from '../context';
 import appUtils from '../utils/common';
@@ -177,7 +179,12 @@ const Admin = () => {
                       alignItems="center"
                     >
                       <Typography variant="body2" fontWeight="bold">Settlement Status:</Typography>
-                      <Typography display="flex">{escrowDetails?.isSettled.toString()}</Typography>
+                      <Chip
+                        color={escrowDetails?.isSettled ? "success" : "default"}
+                        label={escrowDetails?.isSettled ? "Paid" : "Not Paid"}
+                        icon={
+                          escrowDetails?.isSettled ? <DoneIcon /> : <DoDisturbIcon /> 
+                        } />
                     </Box>
                   </Box>
                 </CardContent>

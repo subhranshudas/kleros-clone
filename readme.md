@@ -9,6 +9,8 @@ This repository contains a `create-react-app` template that can be used to devel
 3. Account1 (Client) approves the work.
 4. Account3 (ADMIN, who deployed the app) will disburse the fund to the Account2.
 
+(so far tested for 1 work item creation, more flexibility in future)
+
 (Phase 2) - (smart contract done, UI integration WIP)
 1. Client disputes work.
 2. Voter vote and settle dispute.
