@@ -6,7 +6,6 @@ import EscrowDetails from '../components/EscrowDetails';
 
 const Worker = () => {
     const { contract, setShowLoader } = useContext(Web3Context);
-    const [userEnteredEscrowId, setUserEnteredEscrowId] = useState('');
     const [escrowDetails, setEscrowDetails] = useState(null);
 
     const submitWorkData = async (submittedData) => {

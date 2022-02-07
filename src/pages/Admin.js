@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash';
 import { Box, Button, Typography, Card, CardActions, CardContent, Chip } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
+import FlagIcon from '@mui/icons-material/Flag';
 import { ethers } from 'ethers';
 import { Web3Context } from '../context';
 import appUtils from '../utils/common';
@@ -33,7 +34,7 @@ const Admin = () => {
       }
     };
 
-    const fetchClientEscrowIds = async () => {
+    const fetchEscrowIds = async () => {
       let _txn, _receipt, _events, _eventArgs;
 
       setShowLoader(true);
@@ -60,7 +61,7 @@ const Admin = () => {
           });
 
       } catch (err) {
-          console.error("Error while fetchClientEscrowIds: ", err);
+          console.error("Error while fetchEscrowIds: ", err);
       }
 
       setShowLoader(false);
@@ -113,7 +114,7 @@ const Admin = () => {
             navigate('/');
           } else {
             // ADMIN PATH
-            fetchClientEscrowIds();
+            fetchEscrowIds();
           }
         }
       }
@@ -179,12 +180,24 @@ const Admin = () => {
                       alignItems="center"
                     >
                       <Typography variant="body2" fontWeight="bold">Settlement Status:</Typography>
-                      <Chip
-                        color={escrowDetails?.isSettled ? "success" : "default"}
-                        label={escrowDetails?.isSettled ? "Paid" : "Not Paid"}
-                        icon={
-                          escrowDetails?.isSettled ? <DoneIcon /> : <DoDisturbIcon /> 
-                        } />
+                      
+                      <Box justifyContent="space-between">
+                        <Chip
+                          color={escrowDetails?.isSettled ? "success" : "default"}
+                          label={escrowDetails?.isSettled ? "Paid" : "Not Paid"}
+                          icon={
+                            escrowDetails?.isSettled ? <DoneIcon /> : <DoDisturbIcon /> 
+                          }
+                        />
+                        {escrowDetails?.isDisputed ? (
+                          <Chip
+                            sx={{ marginLeft: 1 }}
+                            color="warning"
+                            label="Disputed!"
+                            icon={<FlagIcon />}
+                        />
+                        ) : null}
+                      </Box>              
                     </Box>
                   </Box>
                 </CardContent>

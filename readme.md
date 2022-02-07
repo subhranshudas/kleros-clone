@@ -3,19 +3,15 @@
 This repository contains a `create-react-app` template that can be used to develop an ethereum dApp.
 
 ## POC scope
-(Phase 1) - completed
 1. Account1 registers as client, creates escrow, tagging Account2 as worker.
 2. After step 1, Account2 connects to the dapp and submits the work.
 3. Account1 (Client) approves the work.
 4. Account3 (ADMIN, who deployed the app) will disburse the fund to the Account2.
+5. Client disputes work.
+6. Voter (Account4) vote and settle dispute.
+7. Admin (Account3) disburse the funds to the right party (client or worker)
+8. (WIP):  Rinkeby deployment, multi work item creation, enhancements, edge cases, code cleanup
 
-(so far tested for 1 work item creation, more flexibility in future)
-
-(Phase 2) - (smart contract done, UI integration WIP)
-1. Client disputes work.
-2. Voter vote and settle dispute.
-3. Admin disburse the funds to the right party (client or worker)
-4. enhancements
 
 ## Note
 some design choices were made very simple to make the POC demoable, improvements are wip.
