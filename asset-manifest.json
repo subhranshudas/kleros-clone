@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.js": "/kleros-clone/static/js/main.8b6c5e71.js",
+    "static/media/mm.png": "/kleros-clone/static/media/mm.054793639984e746ada7.png",
+    "static/media/kleros.svg": "/kleros-clone/static/media/kleros.cc47275ee45a7d1487e6389533db9b67.svg",
+    "index.html": "/kleros-clone/index.html",
+    "main.8b6c5e71.js.map": "/kleros-clone/static/js/main.8b6c5e71.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.8b6c5e71.js"
+  ]
+}
