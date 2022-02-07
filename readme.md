@@ -3,37 +3,25 @@
 This repository contains a `create-react-app` template that can be used to develop an ethereum dApp.
 
 ## POC scope
+(Phase 1)
+1. Account1 registers as client, creates escrow, tagging Account2 as worker.
+2. After step 1, Account2 connects to the dapp and submits the work.
+3. Account1 (Client) approves the work.
+4. Account3 (ADMIN, who deployed the app) will disburse the fund to the Account2.
+
+(Phase 2)
+1. Client disputes work.
+2. Voter vote and settle dispute.
+3. Admin disburse the funds to the right party (client or worker)
 
 
-
-## Quick Start
+## How to run the app locally
 0. Setting up the App
   ```bash
    npm install
    ```
 
-1. Switching to test network (RINKEBY) (Optional)
-
-   - Please skip this step if you want to use local network
-   - Change line - `const NETWORK = LOCAL_NETWORK` to `const NETWORK = TEST_NETWORK` in `hardhat.config.js`
-   - Replace `YOUR_ALCHEMY_API_KEY` with your api key from alchemy in `.env` file
-   - Replace `YOUR_WALLET_PRIVATE_KEY` with your wallet's private key from metamask wallet in `.env` file
-
-2. Running test for sample contract
-
-   ```bash
-   npx hardhat test
-   ```
-
-## Running your app locally
-
-1. Start your react frontend
-
-   ```bash
-   npm start
-   ```
-
-2. (a) Start a hardhat node
+1. (a) Start a hardhat node
 
    ```bash
    npx hardhat node
@@ -45,8 +33,7 @@ This repository contains a `create-react-app` template that can be used to devel
 
    (c) The deployed contract address will be printed to console and will also be automatically be copied to `src/abis/contract-address.json`.
 
-
-3. Connect hardhat node to Metamask
+2. Connect hardhat node to Metamask
 
    Open Metamask > Select the network dropdown from the top left > Select `Custom RPC` and enter the following details:
 
@@ -56,11 +43,24 @@ This repository contains a `create-react-app` template that can be used to devel
 
    Click save. You can use this network to connect to the local hardhat node.
 
-4. Connect your local hardhat account to Metamask for making transactions
-   - After running `npx hardhat node` you will see a list of 20 addresses logged in the terminal
-   - To configure an account copy its private key from the terminal (i.e the text after `Private Key:`)
-   - Open Metamask > Click the account icon on top right > Import Account > Paste the private key you just copied > click Import
-   - You should now have the account connected with 10000 ETH
+3. Start your react frontend
+
+   ```bash
+   npm start
+   ```
+
+4. Running test for sample contract
+
+   ```bash
+   npx hardhat test
+   ```
+## Rinkeby
+Switching to test network (RINKEBY) (Optional)
+
+   - Please skip this step if you want to use local network
+   - Change line - `const NETWORK = LOCAL_NETWORK` to `const NETWORK = TEST_NETWORK` in `hardhat.config.js`
+   - Replace `YOUR_ALCHEMY_API_KEY` with your api key from alchemy in `.env` file
+   - Replace `YOUR_WALLET_PRIVATE_KEY` with your wallet's private key from metamask wallet in `.env` file
 
 ## What’s Included?
 

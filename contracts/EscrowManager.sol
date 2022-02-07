@@ -12,6 +12,7 @@ contract EscrowManager {
     address client,
     address worker,
     uint amount,
+    bool clientDecisionGiven,
     bool isSettled,
     bool isDisputed,
     string agreement,
@@ -34,6 +35,7 @@ contract EscrowManager {
    address payable client;
    address payable worker;
    uint amount;
+   bool clientDecisionGiven;
    bool isSettled;
    bool isDisputed;
    string agreement;
@@ -47,10 +49,17 @@ contract EscrowManager {
   // address => escrowId
   mapping(address => uint) public voters;
 
+  // client address => "escrowId"s
+  mapping(address => uint[]) public clientEscrowIdsMapping;
+
+  // worker address =>  "escrowId"s
+  mapping(address => uint[]) public workerEscrowIdsMapping;
+
   uint private escrowId = 1;
 
   // keeps a list of escrowIds
   uint[] public escrowIds;
+
 
   /**
    * NO USER = 0
@@ -59,6 +68,7 @@ contract EscrowManager {
    * WORKER = 3
    * VOTER = 4
    */
+
   mapping (address => uint) public userType;
 
   constructor() {
@@ -86,6 +96,16 @@ contract EscrowManager {
     _;
   }
 
+  function getClientEscrowIds() public view returns (uint[] memory) {
+    require(clientEscrowIdsMapping[msg.sender].length > 0, "Client does not exist");
+    return clientEscrowIdsMapping[msg.sender];
+  }
+
+  function getWorkerEscrowIds() public view returns (uint[] memory) {
+    require(workerEscrowIdsMapping[msg.sender].length > 0, "Worker does not exist");
+    return workerEscrowIdsMapping[msg.sender];
+  }
+
   /*
   * clients create escrow
   */
@@ -102,18 +122,23 @@ contract EscrowManager {
       amount: _amount,
       isSettled: false,
       isDisputed: false,
+      clientDecisionGiven: false,
       agreement: _agreement,
       submission: "",
       votes: Votes(_yes, _no)
     });
     
     escrowIds.push(escrowId);
-    escrowId++;
 
     // set user type
     userType[msg.sender] = 2;
     userType[_worker] = 3;
 
+    // add escrowIds to client, worker mappings
+    clientEscrowIdsMapping[msg.sender].push(escrowId);
+    workerEscrowIdsMapping[_worker].push(escrowId);
+
+    escrowId++;
 
     emit EscrowCreated(escrowId - 1);
   }
@@ -135,6 +160,8 @@ contract EscrowManager {
 
   function approveWork(bool _approval, uint _escrowId) public {
     require(bytes(escrows[_escrowId].submission).length > 0, "Cannot judge unsubmitted work");
+
+    escrows[_escrowId].clientDecisionGiven = true;
 
     if (_approval) {
       escrows[_escrowId].isDisputed = false;
@@ -179,8 +206,7 @@ contract EscrowManager {
   function disburseFunds(uint _escrowId) public
     isAdmin(msg.sender)
     isDisputeResolved(_escrowId)
-    isNotEscrowSettled(_escrowId)
-    payable {
+    isNotEscrowSettled(_escrowId) {
       Escrow storage _escrow = escrows[_escrowId];
 
       // for simplicity of the POC, only 1 vote
@@ -190,7 +216,22 @@ contract EscrowManager {
       // (bool success) = payable(whomToPay).send(_escrow.amount);
       // require(success, "ESCROW SETTLEMENT FAILED!");
 
-      payable(whomToPay).transfer(_escrow.amount);
+      // payable(whomToPay).transfer(_escrow.amount);
+      uint gasDebug = gasleft();
+
+      console.log("gasDebug: ", gasDebug);
+      console.log("_escrow.amount: ", _escrow.amount);
+
+      (bool success, bytes memory result) = payable(whomToPay).call{ value: _escrow.amount }("");
+
+      gasDebug = gasleft();
+      console.log("gasDebug: ", gasDebug);
+
+      console.log("printing the data given by call");
+      console.logBytes(result);
+      require(success, "TRANSFER FAILED!");
+
+      console.log("disburseFunds() payment done");
 
       escrows[_escrowId].isSettled = true;
 
@@ -209,6 +250,7 @@ contract EscrowManager {
       _escrow.client,
       _escrow.worker,
       _escrow.amount,
+      _escrow.clientDecisionGiven,
       _escrow.isSettled,
       _escrow.isDisputed,
       _escrow.agreement,

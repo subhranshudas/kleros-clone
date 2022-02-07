@@ -14,7 +14,35 @@ const unWrapAddress = (addr) => {
   return addr;
 };
 
+const PUBLIC_URLS = {
+  TUTORIAL: "https://github.com/subhranshudas/kleros-clone/blob/main/readme.md#poc-scope"
+};
+
+export const displayAddress = (_addr) => {
+  let addr;
+
+  if (!_addr) {
+    return '';
+  }
+
+  if (Array.isArray(_addr)) {
+    addr = _addr[0];
+  } else {
+    addr = _addr || '';
+  }
+
+  const frags = [
+    addr.substr(0, 15),
+    '...',
+    addr.substr(addr.length - 6, addr.length - 1)
+  ];
+
+  return frags.join('');
+};
+
 export default {
   unWrapAddress,
-  USER_TYPE
+  USER_TYPE,
+  PUBLIC_URLS,
+  displayAddress
 };

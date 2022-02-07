@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import {
-  Divider,
   Drawer,
   IconButton,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
+  Link
 } from "@mui/material";
 
 import { makeStyles } from '@mui/styles';
 import MenuIcon from '@mui/icons-material/Menu';
+import appUtils from '../utils/common';
 
 const useStyles = makeStyles(()=>({
     link:{
@@ -29,19 +29,21 @@ function DrawerComponent() {
   return (
     <>
       <Drawer
+        anchor="right"
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
+
       >
         <List>
         <ListItem onClick={() => setOpenDrawer(false)}>
             <ListItemText>
-              <Link to="/" className={classes.link}>Tutorial</Link>
+              <Link href={appUtils.PUBLIC_URLS.TUTORIAL} className={classes.link}>Tutorial</Link>
             </ListItemText>
           </ListItem>
         </List>
       </Drawer>
       <IconButton onClick={() => setOpenDrawer(!openDrawer)}className={classes.icon}>
-        <MenuIcon />
+        <MenuIcon sx={{ color: '#fff' }} />
       </IconButton>
     </>
   );

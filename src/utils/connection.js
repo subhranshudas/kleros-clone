@@ -82,7 +82,7 @@ const getContract = async ({ contractInfo }) => {
 };
 
 
-const bootStrapWeb3 = async ({ setCurrentAccount, setContract, contractInfo }) => {
+const bootStrapWeb3 = async ({ setCurrentAccount, setShowLoader, setContract, contractInfo }) => {
     // check if metamask is installed in browser
     if (isMetamaskInstalled) {
         console.log('Metamask is installed!');
@@ -92,12 +92,14 @@ const bootStrapWeb3 = async ({ setCurrentAccount, setContract, contractInfo }) =
         // event triggered when account is changed in metamask
         ethereum.on('accountsChanged', async (accounts) => {
             console.log('accountsChanged(): ', accounts)
+            setShowLoader(true);
             const account = await getAccount();
             console.log("accountsChanged(): current account: ", account);
             setCurrentAccount(account);
 
             const contract = await getContract({ contractInfo });
             setContract(contract);
+            setShowLoader(false);
         })
 
         // event triggered when metamask is connected to chain and can make rpc request
@@ -114,6 +116,7 @@ const bootStrapWeb3 = async ({ setCurrentAccount, setContract, contractInfo }) =
         })
 
         // check if connected on loaded
+        setShowLoader(true);
         let accountAddress = await getAccount();
         console.warn("checkOnLoadIfConnected() ", accountAddress);
         
@@ -125,6 +128,7 @@ const bootStrapWeb3 = async ({ setCurrentAccount, setContract, contractInfo }) =
         } else { // do something else if NOT connected
             setCurrentAccount(null);
         }
+        setShowLoader(false);
     }
     else {
         alert('Install Metamask extension to connect with DApp!')
