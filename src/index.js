@@ -14,7 +14,7 @@ const Wrapper = () => {
 
   return (
     <ThemeProvider theme={lightTheme}>
-       <BrowserRouter>
+       <BrowserRouter basename="/kleros-clone">
         <Routes>
           <Route path="/" element={<App />}>
             <Route path="admin" element={<Admin />} />
