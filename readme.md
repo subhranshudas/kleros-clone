@@ -2,7 +2,8 @@
 
 This repository contains a `create-react-app` template that can be used to develop an ethereum dApp.
 
-`main` branch is functional
+Note - `working-localhost` is a branch prior to "GH pages, rinkeby deployment" changes if you want to simply
+run a local app with local hardhat node if the `main` branch has any issues
 
 ## POC scope
 1. Account1 registers as client, creates escrow, tagging Account2 as worker.
@@ -20,7 +21,9 @@ This repository contains a `create-react-app` template that can be used to devel
    -- code cleanup
 
 ## Rinkeby deployment
-https://rinkeby.etherscan.io/address/0xb29c3454ae14dc99052dab77d31bca791e6c3e6a#code
+https://rinkeby.etherscan.io/address/0xb29c3454ae14dc99052dab77d31bca791e6c3e6a
+
+has a list of succesful transactions as per the flow
 
 ## Note
 some design choices were made very simple to make the POC demoable, improvements are wip.
