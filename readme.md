@@ -2,6 +2,8 @@
 
 This repository contains a `create-react-app` template that can be used to develop an ethereum dApp.
 
+`main` branch is functional
+
 ## POC scope
 1. Account1 registers as client, creates escrow, tagging Account2 as worker.
 2. After step 1, Account2 connects to the dapp and submits the work.
