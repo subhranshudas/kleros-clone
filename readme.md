@@ -12,8 +12,15 @@ This repository contains a `create-react-app` template that can be used to devel
 5. Client disputes work.
 6. Voter (Account4) vote and settle dispute.
 7. Admin (Account3) disburse the funds to the right party (client or worker)
-8. (WIP):  Rinkeby deployment, multi work item creation, enhancements, edge cases, code cleanup
+8. (WIP):  
+   -- Deploying the app on GH and connecting to Rinkeby NW
+   -- multi work item creation
+   -- enhancements
+   -- edge cases
+   -- code cleanup
 
+## Rinkeby deployment
+https://rinkeby.etherscan.io/address/0xb29c3454ae14dc99052dab77d31bca791e6c3e6a#code
 
 ## Note
 some design choices were made very simple to make the POC demoable, improvements are wip.
